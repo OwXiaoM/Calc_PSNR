@@ -21,6 +21,7 @@ def main():
     # setup folder and path
     folder, border = setup(args)
     # print(border)
+    border = 2
     test_results = OrderedDict()
     test_results['psnr'] = []
     test_results['ssim'] = []
@@ -28,14 +29,22 @@ def main():
     test_results['ssim_y'] = []
     test_results['psnr_b'] = []
     psnr, ssim, psnr_y, ssim_y, psnr_b = 0, 0, 0, 0, 0
-    print('folder',folder)
+
     for idx, path in enumerate(sorted(glob.glob(os.path.join(folder, '*')))):
         # read image
 
         path_hr = args.folder_sr + path.replace(args.folder_gt, '')
-        print('ddd',path_hr)
-        imgname, img_gt, img_ht = get_image_pair(args, path, path_hr)  # image to HWC-BGR, float32
 
+        #imgname, img_gt, img_ht = get_image_pair(args, path, path_hr)  # image to HWC-BGR, float32
+
+        path_lr =  path.replace('/HR', '/LR_bicubic/x{}'.format(str(args.scale)))
+
+        imgname, img_gt, img_ht, img_lq = get_image_pair(args, path, path_hr, path_lr)  # image to HWC-BGR, float32
+        img_lq = np.transpose(img_lq if img_lq.shape[2] == 1 else img_lq[:, :, [2, 1, 0]],
+                              (2, 0, 1))  # HCW-BGR to CHW-RGB
+        img_lq = torch.from_numpy(img_lq).float().unsqueeze(0).to('cpu')  # CHW-RGB to NCHW-RGB
+
+        _, _, h_old, w_old = img_lq.size()
 
         # save image
         # img_ht=torch.as_tensor(img_ht)
@@ -45,7 +54,7 @@ def main():
         # evaluate psnr/ssim/psnr_b
         if img_gt is not None:
             img_gt = (img_gt * 255.0).round().astype(np.uint8)  # float32 to uint8
-
+            img_gt = img_gt[:h_old * args.scale, :w_old * args.scale, ...]  # crop gt
             img_gt = np.squeeze(img_gt)
 
             psnr = util.calculate_psnr(output, img_gt, crop_border=border)
@@ -71,7 +80,7 @@ def main():
     if img_gt is not None:
         ave_psnr = sum(test_results['psnr']) / len(test_results['psnr'])
         ave_ssim = sum(test_results['ssim']) / len(test_results['ssim'])
-        print('\n-- Average PSNR/SSIM(RGB): {:.2f} dB; {:.4f}'.format(ave_psnr, ave_ssim))
+        print(' \n-- Average PSNR/SSIM(RGB): {:.2f} dB; {:.4f}'.format( ave_psnr, ave_ssim))
         if img_gt.ndim == 3:
             ave_psnr_y = sum(test_results['psnr_y']) / len(test_results['psnr_y'])
             ave_ssim_y = sum(test_results['ssim_y']) / len(test_results['ssim_y'])
@@ -91,16 +100,17 @@ def setup(args):
     return folder, border
 
 
-def get_image_pair(args, path, path_hr):
+def get_image_pair(args, path, path_hr, path_lr):
     (imgname, imgext) = os.path.splitext(os.path.basename(path))
 
     # 001 classical image sr/ 002 lightweight image sr (load lq-gt image pairs)
     if args.task in ['classical_sr', 'lightweight_sr']:
         img_gt = cv2.imread(path, cv2.IMREAD_COLOR).astype(np.float32) / 255.
         img_hr = cv2.imread(path_hr, cv2.IMREAD_COLOR).astype(np.float32) / 255.
-        #img_lq = cv2.imread(path_lr, cv2.IMREAD_COLOR).astype(np.float32) / 255.
+        img_lq = cv2.imread(path_lr, cv2.IMREAD_COLOR).astype(np.float32) / 255.
 
-    return imgname, img_hr, img_gt
+    return imgname, img_hr, img_gt, img_lq
+
 
 
 if __name__ == '__main__':
