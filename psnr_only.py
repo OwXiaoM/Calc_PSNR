@@ -21,7 +21,6 @@ def main():
     # setup folder and path
     folder, border = setup(args)
     # print(border)
-    border = 2
     test_results = OrderedDict()
     test_results['psnr'] = []
     test_results['ssim'] = []
@@ -34,7 +33,7 @@ def main():
         # read image
 
         path_hr = args.folder_sr + path.replace(args.folder_gt, '')
-
+        print('ddd',path_hr)
         imgname, img_gt, img_ht = get_image_pair(args, path, path_hr)  # image to HWC-BGR, float32
 
 
@@ -72,7 +71,7 @@ def main():
     if img_gt is not None:
         ave_psnr = sum(test_results['psnr']) / len(test_results['psnr'])
         ave_ssim = sum(test_results['ssim']) / len(test_results['ssim'])
-        print('\n{} \n-- Average PSNR/SSIM(RGB): {:.2f} dB; {:.4f}'.format(save_dir, ave_psnr, ave_ssim))
+        print('\n-- Average PSNR/SSIM(RGB): {:.2f} dB; {:.4f}'.format(ave_psnr, ave_ssim))
         if img_gt.ndim == 3:
             ave_psnr_y = sum(test_results['psnr_y']) / len(test_results['psnr_y'])
             ave_ssim_y = sum(test_results['ssim_y']) / len(test_results['ssim_y'])
