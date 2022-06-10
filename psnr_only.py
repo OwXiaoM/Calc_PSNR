@@ -21,7 +21,6 @@ def main():
     # setup folder and path
     folder, border = setup(args)
     # print(border)
-    border = 2
     test_results = OrderedDict()
     test_results['psnr'] = []
     test_results['ssim'] = []
@@ -32,14 +31,16 @@ def main():
 
     for idx, path in enumerate(sorted(glob.glob(os.path.join(folder, '*')))):
         # read image
-
+ 
         path_hr = args.folder_sr + path.replace(args.folder_gt, '')
 
         #imgname, img_gt, img_ht = get_image_pair(args, path, path_hr)  # image to HWC-BGR, float32
-
-        path_lr =  path.replace('/HR', '/LR_bicubic/x{}'.format(str(args.scale)))
-
+        #print('1',path)
+        #print('2','/LR_bicubic/x{}'.format(str(args.scale)))
+        path_lr =  (path.replace('/HR', '/LR_bicubic/X{}'.format(str(args.scale)))).replace('.png','x{}.png'.format(args.scale))
+        #print('3',path_lr)
         imgname, img_gt, img_ht, img_lq = get_image_pair(args, path, path_hr, path_lr)  # image to HWC-BGR, float32
+ 
         img_lq = np.transpose(img_lq if img_lq.shape[2] == 1 else img_lq[:, :, [2, 1, 0]],
                               (2, 0, 1))  # HCW-BGR to CHW-RGB
         img_lq = torch.from_numpy(img_lq).float().unsqueeze(0).to('cpu')  # CHW-RGB to NCHW-RGB
@@ -50,11 +51,11 @@ def main():
         # img_ht=torch.as_tensor(img_ht)
         output = img_ht
         output = (output * 255.0).round().astype(np.uint8)  # float32 to uint8
-
+   
         # evaluate psnr/ssim/psnr_b
         if img_gt is not None:
             img_gt = (img_gt * 255.0).round().astype(np.uint8)  # float32 to uint8
-            img_gt = img_gt[:h_old * args.scale, :w_old * args.scale, ...]  # crop gt
+            img_gt = img_gt[:h_old * args.scale, :w_old * args.scale, ...]  # crop gt   
             img_gt = np.squeeze(img_gt)
 
             psnr = util.calculate_psnr(output, img_gt, crop_border=border)
@@ -109,7 +110,7 @@ def get_image_pair(args, path, path_hr, path_lr):
         img_hr = cv2.imread(path_hr, cv2.IMREAD_COLOR).astype(np.float32) / 255.
         img_lq = cv2.imread(path_lr, cv2.IMREAD_COLOR).astype(np.float32) / 255.
 
-    return imgname, img_hr, img_gt, img_lq
+    return imgname, img_gt, img_hr, img_lq
 
 
 
