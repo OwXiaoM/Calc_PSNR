@@ -30,17 +30,10 @@ def main():
     psnr, ssim, psnr_y, ssim_y, psnr_b = 0, 0, 0, 0, 0
 
     for idx, path in enumerate(sorted(glob.glob(os.path.join(folder, '*')))):
-        # read image
- 
-        path_hr = args.folder_sr + path.replace(args.folder_gt, '')
-
-        #imgname, img_gt, img_ht = get_image_pair(args, path, path_hr)  # image to HWC-BGR, float32
-        #print('1',path)
-        #print('2','/LR_bicubic/x{}'.format(str(args.scale)))
+        path_hr_sr = args.folder_sr + path.replace(args.folder_gt, '') 
+        path_hr = path_hr_sr.replace('.','_x{}_SR.'.format(str(args.scale)))
         path_lr =  (path.replace('/HR', '/LR_bicubic/X{}'.format(str(args.scale)))).replace('.png','x{}.png'.format(args.scale))
-        #print('3',path_lr)
         imgname, img_gt, img_ht, img_lq = get_image_pair(args, path, path_hr, path_lr)  # image to HWC-BGR, float32
- 
         img_lq = np.transpose(img_lq if img_lq.shape[2] == 1 else img_lq[:, :, [2, 1, 0]],
                               (2, 0, 1))  # HCW-BGR to CHW-RGB
         img_lq = torch.from_numpy(img_lq).float().unsqueeze(0).to('cpu')  # CHW-RGB to NCHW-RGB
@@ -106,6 +99,7 @@ def get_image_pair(args, path, path_hr, path_lr):
 
     # 001 classical image sr/ 002 lightweight image sr (load lq-gt image pairs)
     if args.task in ['classical_sr', 'lightweight_sr']:
+
         img_gt = cv2.imread(path, cv2.IMREAD_COLOR).astype(np.float32) / 255.
         img_hr = cv2.imread(path_hr, cv2.IMREAD_COLOR).astype(np.float32) / 255.
         img_lq = cv2.imread(path_lr, cv2.IMREAD_COLOR).astype(np.float32) / 255.
