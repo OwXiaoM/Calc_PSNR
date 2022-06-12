@@ -1,4 +1,4 @@
-# psnr
+# Calculation of psnr from SwinIR code
 ```bash
---task classical_sr --scale 4 --folder_gt  testsets/div2k/HR --folder_sr results/ntire_div2kx4
+python psnr_only.py --task classical_sr --scale 4 --folder_gt  {benchmark_path}/benchmark/{benchmark_name}/HR --folder_sr {result_save_path}/results-{benchmark_name}
 ```
