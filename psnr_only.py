@@ -20,7 +20,6 @@ def main():
 
     # setup folder and path
     folder, border = setup(args)
-    # print(border)
     test_results = OrderedDict()
     test_results['psnr'] = []
     test_results['ssim'] = []
@@ -41,7 +40,6 @@ def main():
         _, _, h_old, w_old = img_lq.size()
 
         # save image
-        # img_ht=torch.as_tensor(img_ht)
         output = img_ht
         output = (output * 255.0).round().astype(np.uint8)  # float32 to uint8
    
