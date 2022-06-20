@@ -1,4 +1,4 @@
-# Calculation of psnr from SwinIR code
+# Calculation of psnr
 from https://github.com/JingyunLiang/SwinIR/blob/main/main_test_swinir.py
 
 apply on the saving format of https://github.com/sanghyun-son/EDSR-PyTorch
