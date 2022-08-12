@@ -1,7 +1,7 @@
 # Calculation of Peak Signal-to-Noise Ratio between two pictures
-from https://github.com/JingyunLiang/SwinIR/blob/main/main_test_swinir.py
+The scrip is extracted from https://github.com/JingyunLiang/SwinIR/blob/main/main_test_swinir.py
 
-apply on the saving format of https://github.com/sanghyun-son/EDSR-PyTorch
+And it should be applied on the saving format of https://github.com/sanghyun-son/EDSR-PyTorch
 ```bash
 python psnr_only.py --task classical_sr --scale 4 --folder_gt  {benchmark_path}/benchmark/{benchmark_name}/HR --folder_sr {result_save_path}/results-{benchmark_name}
 ```
@@ -10,6 +10,7 @@ python psnr_only.py --task classical_sr --scale 4 --folder_gt  {benchmark_path}/
 python psnr_only.py --task classical_sr --scale 4 --folder_gt  {benchmark_path}/benchmark/{benchmark_name}/HR --folder_sr {result_save_path}/results-{benchmark_name}
 ```
 **At last I think when running the script on different benchmark, I have to change the benchmark name everytime and I found it annoying, so I write another file that helps me execute this script, which is ssim_shell.py, it also writes logs in the file path of certain experiment.**
+
 Just
 ```bash
 python ssim_shell.py --exp_name {the saved experiment name} --scale {scale, scale is important when cropping the border}
