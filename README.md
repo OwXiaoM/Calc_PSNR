@@ -13,4 +13,4 @@ At last I think when running the script on different benchmark, I have to change
 Just
 ```bash
 python ssim_shell.py --exp_name {the saved experiment name} --scale {scale, scale is important when cropping the border}
-```bash
+```
