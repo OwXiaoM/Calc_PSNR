@@ -1,4 +1,4 @@
-# Calculation of Peak Signal-to-Noise Ratio between two pictures
+# Calculation of Peak Signal-to-Noise Ratio and Structural Similarity between two pictures
 The scrip is extracted from https://github.com/JingyunLiang/SwinIR/blob/main/main_test_swinir.py
 And it should be applied on the saving format of https://github.com/sanghyun-son/EDSR-PyTorch
 
