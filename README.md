@@ -17,4 +17,4 @@ python psnr_only.py --task classical_sr --scale 4 --folder_gt  {benchmark_path}/
 ```bash
 python ssim_shell.py --exp_name {the saved experiment name} --scale {scale, scale is important when cropping the border}
 ```
-**Normally it finishes calculating on 5 benchmarks with 30 secondes.**
+**Normally it finishes calculating on 5 benchmarks within 30 secondes.**
