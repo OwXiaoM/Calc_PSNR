@@ -11,7 +11,8 @@ python psnr_only.py --task classical_sr --scale 4 --folder_gt  {benchmark_path}/
 ```
 **At last I think when running the script on different benchmark, I have to change the benchmark name everytime and I found it annoying, so I write another file that helps me execute this script, which is ssim_shell.py, it also writes logs in the file path of certain experiment.**
 
-Just
+#Just
 ```bash
 python ssim_shell.py --exp_name {the saved experiment name} --scale {scale, scale is important when cropping the border}
 ```
+**Normally it finishes calculating on 5 benchmarks with 30 secondes.
