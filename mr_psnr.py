@@ -7,7 +7,7 @@ Created on Sat Dec  4 21:20:22 2021
 import os
 import numpy as np
 from pathlib import Path
-from utils import calc_psnr, calc_ssim
+from mr_utils import calc_psnr, calc_ssim
 
 import warnings
 warnings.filterwarnings('ignore')
